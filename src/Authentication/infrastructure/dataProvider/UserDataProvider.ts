@@ -25,6 +25,7 @@ export default class UserDataProvider implements UserRepository {
       data: {
         name: user.name,
         email: user.email,
+        password: user.password,
         role: Role[user.role],
       },
     });
@@ -36,6 +37,13 @@ export default class UserDataProvider implements UserRepository {
     const userEntity = await this.client.findUnique({ where: { id } });
 
     return this.mapEntityToDomain(userEntity);
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    const userEntity = await this.client.findUnique({
+      where: { email },
+    });
+    return userEntity ? this.mapEntityToDomain(userEntity) : null;
   }
 
   async findAll(): Promise<User[]> {
@@ -70,6 +78,7 @@ export default class UserDataProvider implements UserRepository {
       userEntity.name,
       userEntity.email,
       Role[userEntity.role],
+      userEntity.password,
       userEntity.id,
     );
   }
