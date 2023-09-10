@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN mv ./.env.production ./.env
+# RUN mv ./.env.production ./.env
 
 RUN npm ci
 
