@@ -9,14 +9,14 @@ export default class User {
   role: Role;
   @Exclude()
   password: string;
-  id?: number;
+  id?: string;
 
   constructor(
     name: string,
     email: string,
     role: Role,
     password: string,
-    id?: number,
+    id?: string,
   ) {
     if (!User.validateEmail(email)) {
       throw new InvalidEmailException();

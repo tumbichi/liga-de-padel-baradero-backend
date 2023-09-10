@@ -91,4 +91,13 @@ export default class AuthenticationController {
         }
       });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Post('/validate-authorization')
+  async validateAuthorization(
+    @Req() request: Request & { user: User },
+  ): Promise<User> {
+    return request.user;
+  }
 }

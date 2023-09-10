@@ -33,7 +33,7 @@ export default class UserDataProvider implements UserRepository {
     return this.mapEntityToDomain(userEntity);
   }
 
-  async findById(id: number): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     const userEntity = await this.client.findUnique({ where: { id } });
 
     return this.mapEntityToDomain(userEntity);
@@ -52,13 +52,13 @@ export default class UserDataProvider implements UserRepository {
     return users.map((userEntity) => this.mapEntityToDomain(userEntity));
   }
 
-  async delete(id: number): Promise<User> {
+  async delete(id: string): Promise<User> {
     const userEntity = await this.client.delete({ where: { id } });
 
     return this.mapEntityToDomain(userEntity);
   }
 
-  async update(id: number, partialUser: Partial<User>): Promise<User> {
+  async update(id: string, partialUser: Partial<User>): Promise<User> {
     const userEntity = await this.client.update({
       data: {
         name: partialUser.name,

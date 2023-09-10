@@ -30,7 +30,7 @@ export default class UserController {
   @Get('/:id')
   async getUserById(@Param('id') userId: string): Promise<User> {
     return this.userService
-      .findUserById(parseInt(userId))
+      .findUserById(userId)
       .then((user) => user)
       .catch((error) => {
         switch (error.name) {
@@ -49,7 +49,7 @@ export default class UserController {
   @Delete('/:id')
   async deleteUser(@Param('id') userId: string): Promise<boolean> {
     return this.userService
-      .deleteUser(parseInt(userId))
+      .deleteUser(userId)
       .then((userDeleted) => !!userDeleted)
       .catch((error) => {
         switch (error.name) {

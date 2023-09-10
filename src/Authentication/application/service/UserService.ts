@@ -23,11 +23,11 @@ export default class UserService {
     return userCreated;
   }
 
-  async deleteUser(userId: number): Promise<User> {
+  async deleteUser(userId: string): Promise<User> {
     return await this.repository.delete(userId);
   }
 
-  async findUserById(userId: number): Promise<User> {
+  async findUserById(userId: string): Promise<User> {
     const user = await this.repository.findById(userId);
 
     if (user === null) {
