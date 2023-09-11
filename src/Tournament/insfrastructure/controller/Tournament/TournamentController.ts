@@ -51,8 +51,7 @@ export default class TournamentController {
       });
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/:id')
   async getTournamentById(
     @Param('id') tournamentId: string,
