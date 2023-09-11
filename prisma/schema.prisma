@@ -23,11 +23,13 @@ model Player {
   firstname String
   lastname  String
 
-  matches    Match[]
   tournament Tournament[]
 
   matchesWon  Match[] @relation("matchesWon")
   matchesLost Match[] @relation("matchesLost")
+
+  matchesCouple1 Match[] @relation("couple1")
+  matchesCouple2 Match[] @relation("couple2")
 }
 
 model Tournament {
@@ -53,10 +55,11 @@ model Match {
   id      Int       @id @default(autoincrement())
   date    DateTime?
   place   Place?
-  players Player[]
+  couple1 Player[]  @relation("couple1")
+  couple2 Player[]  @relation("couple2")
 
   winners Player[] @relation("matchesWon")
-  losers  Player[] @relation("matchesLost") 
+  losers  Player[] @relation("matchesLost")
 
   score Score?
 

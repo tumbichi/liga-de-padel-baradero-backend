@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Place, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import PrismaClient from 'Base/config/prisma/PrismaClient';
 import Player from 'Tournament/domain/model/Player/Player';
 import Match from 'Tournament/domain/model/Tournament/Match';
@@ -86,7 +86,11 @@ export default class TournamentDataProvider implements TournamentRepository {
           rounds: {
             include: {
               matches: {
-                include: { players: true, score: { include: { sets: true } } },
+                include: {
+                  couple1: true,
+                  couple2: true,
+                  score: { include: { sets: true } },
+                },
               },
             },
           },
@@ -96,7 +100,15 @@ export default class TournamentDataProvider implements TournamentRepository {
 
       const rounds = tournamentEntity.rounds.map((roundEntity) => {
         const matches = roundEntity.matches.map((matchEntity) => {
-          const players = matchEntity.players.map(
+          const couple1 = matchEntity.couple1.map(
+            (playerEntity) =>
+              new Player(
+                playerEntity.firstname,
+                playerEntity.lastname,
+                playerEntity.id,
+              ),
+          );
+          const couple2 = matchEntity.couple2.map(
             (playerEntity) =>
               new Player(
                 playerEntity.firstname,
@@ -105,7 +117,8 @@ export default class TournamentDataProvider implements TournamentRepository {
               ),
           );
           return new Match(
-            players,
+            couple1,
+            couple2,
             matchEntity.date,
             matchEntity.place,
             undefined,
@@ -194,17 +207,30 @@ export default class TournamentDataProvider implements TournamentRepository {
     try {
       const matchEntity = await this.matchClient.create({
         data: {
-          players: {
-            connect: match.players.map((player) => ({ id: player.id })),
+          couple1: {
+            connect: [{ id: match.couple1[0].id }, { id: match.couple1[1].id }],
+          },
+          couple2: {
+            connect: [{ id: match.couple2[0].id }, { id: match.couple2[1].id }],
           },
           round: { connect: { id: roundId } },
         },
         include: {
-          players: true,
+          couple1: true,
+          couple2: true,
         },
       });
 
-      const players = matchEntity.players.map(
+      const couple1 = matchEntity.couple1.map(
+        (playerEntity) =>
+          new Player(
+            playerEntity.firstname,
+            playerEntity.lastname,
+            playerEntity.id,
+          ),
+      );
+
+      const couple2 = matchEntity.couple2.map(
         (playerEntity) =>
           new Player(
             playerEntity.firstname,
@@ -214,7 +240,8 @@ export default class TournamentDataProvider implements TournamentRepository {
       );
 
       return new Match(
-        players,
+        couple1,
+        couple2,
         undefined,
         undefined,
         undefined,
@@ -240,6 +267,7 @@ export default class TournamentDataProvider implements TournamentRepository {
       });
 
       return new Match(
+        [],
         [],
         matchEntity.date,
         matchEntity.place,
@@ -289,6 +317,7 @@ export default class TournamentDataProvider implements TournamentRepository {
       });
 
       return new Match(
+        [],
         [],
         undefined,
         undefined,

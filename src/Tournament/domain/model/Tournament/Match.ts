@@ -3,7 +3,8 @@ import Player from '../Player/Player';
 import Score from './Score';
 
 export default class Match {
-  players: Player[];
+  couple1: Player[];
+  couple2: Player[];
   date?: Date;
   place?: Place;
   winners?: Player[];
@@ -11,7 +12,8 @@ export default class Match {
   score?: Score;
   id: number;
   constructor(
-    players: Player[],
+    couple1: Player[],
+    couple2: Player[],
     date?: Date,
     place?: Place,
     winners?: Player[],
@@ -21,7 +23,8 @@ export default class Match {
   ) {
     this.date = date;
     this.place = place;
-    this.players = players;
+    this.couple1 = couple1;
+    this.couple2 = couple2;
     this.winners = winners;
     this.lossers = lossers;
     this.score = score;

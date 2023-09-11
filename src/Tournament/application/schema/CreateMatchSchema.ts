@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 const CreateMatchSchema = z.object({
-  playersIds: z.array(z.number()),
+  couple1Ids: z.array(z.number()),
+  couple2Ids: z.array(z.number()),
   roundId: z.number(),
 });
 

@@ -57,10 +57,15 @@ export default class TournamentService {
     return tournaments;
   }
 
-  async createMatch(playerIds: number[], roundId: number): Promise<Match> {
-    const players = playerIds.map((playerId) => new Player('', '', playerId));
+  async createMatch(
+    couple1Ids: number[],
+    couple2Ids: number[],
+    roundId: number,
+  ): Promise<Match> {
+    const couple1 = couple1Ids.map((playerId) => new Player('', '', playerId));
+    const couple2 = couple2Ids.map((playerId) => new Player('', '', playerId));
     const matchCreated = await this.repository.createMatch(
-      new Match(players),
+      new Match(couple1, couple2),
       roundId,
     );
 

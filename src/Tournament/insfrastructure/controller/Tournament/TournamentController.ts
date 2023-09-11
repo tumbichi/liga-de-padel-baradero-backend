@@ -84,7 +84,8 @@ export default class TournamentController {
   @Post('/match/create')
   async createMatch(@Body() createMatchDto: CreateMatchDto): Promise<Match> {
     return await this.tournamentService.createMatch(
-      createMatchDto.playersIds,
+      createMatchDto.couple1Ids,
+      createMatchDto.couple2Ids,
       createMatchDto.roundId,
     );
   }
