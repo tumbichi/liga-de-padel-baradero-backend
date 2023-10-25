@@ -6,15 +6,88 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  role  Role
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String?
+  password String
+  role     Role    @default(USER)
+}
+
+model Player {
+  id        Int    @id @default(autoincrement())
+  firstname String
+  lastname  String
+
+  tournament Tournament[]
+
+  matchesWon  Match[] @relation("matchesWon")
+  matchesLost Match[] @relation("matchesLost")
+
+  matchesCouple1 Match[] @relation("couple1")
+  matchesCouple2 Match[] @relation("couple2")
+}
+
+model Tournament {
+  id          String   @id @default(uuid())
+  description String
+  beginsAt    DateTime
+  endsAt      DateTime
+  rounds      Round[]  @relation("rounds")
+  players     Player[]
+}
+
+model Round {
+  id          Int    @id @default(autoincrement())
+  description String
+
+  matches Match[]
+
+  tournament   Tournament @relation("rounds", fields: [tournamentId], references: [id])
+  tournamentId String
+}
+
+model Match {
+  id      Int       @id @default(autoincrement())
+  date    DateTime?
+  place   Place?
+  couple1 Player[]  @relation("couple1")
+  couple2 Player[]  @relation("couple2")
+
+  winners Player[] @relation("matchesWon")
+  losers  Player[] @relation("matchesLost")
+
+  score Score?
+
+  round   Round? @relation(fields: [roundId], references: [id])
+  roundId Int?
+}
+
+enum Place {
+  GATO
+  SOCIAL
+}
+
+model Score {
+  id Int @id @default(autoincrement())
+
+  sets Set[]
+
+  match   Match @relation(fields: [matchId], references: [id])
+  matchId Int   @unique
+}
+
+model Set {
+  id         Int @id @default(autoincrement())
+  gamesTeam1 Int
+  gamesTeam2 Int
+
+  score   Score @relation(fields: [scoreId], references: [id])
+  scoreId Int
 }
 
 enum Role {

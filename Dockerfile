@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN mv ./.env.production ./.env
+# RUN mv ./.env.production ./.env
 
 RUN npm ci
 
@@ -14,4 +14,4 @@ RUN npm run build
 
 USER node
 
-CMD npm run start:prod:migrate
+CMD npm run start:prod
